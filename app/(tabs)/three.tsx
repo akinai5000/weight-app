@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { BackupSettingsCard } from '@/components/BackupSettingsCard';
 import { HabitSettingsCard } from '@/components/HabitSettingsCard';
 import { useHowToUse } from '@/components/HowToUseContext';
 import {
@@ -28,6 +29,7 @@ import {
   SettingsNumericKeyboardAccessoryPortals,
   useAndroidKeyboardToolbarHeight,
 } from '@/components/NumericKeyboardAccessory';
+import { useThemeColor } from '@/components/ThemeContext';
 import { WeightReminderSettingsCard } from '@/components/WeightReminderSettingsCard';
 import { type Habit, loadHabits } from '@/constants/Habits';
 import { seedYearChartDummyData } from '@/constants/seedYearChartDummy';
@@ -103,6 +105,7 @@ const textMap = {
 export default function TabThreeSettings() {
   const isFocused = useIsFocused();
   const { openHowToUse } = useHowToUse();
+  const { reloadFromStorage: reloadThemeFromStorage } = useThemeColor();
   const [language, setLanguage] = useState<Language>('ja');
   const [profile, setProfile] = useState<ProfileSettings>(defaultProfile);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
@@ -111,6 +114,7 @@ export default function TabThreeSettings() {
   const [habits, setHabits] = useState<Habit[]>([]);
   const [isSeedingYearDummy, setIsSeedingYearDummy] = useState(false);
   const [isReorderingHabits, setIsReorderingHabits] = useState(false);
+  const [reminderReloadToken, setReminderReloadToken] = useState(0);
   const scrollViewRef = useRef<ScrollView>(null);
   const t = textMap[language];
   const androidKeyboardHeight = useAndroidKeyboardToolbarHeight();
@@ -173,6 +177,12 @@ export default function TabThreeSettings() {
   const handleChangeLanguage = async (next: Language) => {
     setLanguage(next);
     await AsyncStorage.setItem('@app_language', next);
+  };
+
+  const handleBackupRestored = async () => {
+    await loadSettings();
+    await reloadThemeFromStorage();
+    setReminderReloadToken((n) => n + 1);
   };
 
   const handleSeedYearDummy = () => {
@@ -285,7 +295,16 @@ export default function TabThreeSettings() {
               </TouchableOpacity>
             </View>
 
-            <WeightReminderSettingsCard language={language} />
+            <WeightReminderSettingsCard
+              language={language}
+              reloadToken={reminderReloadToken}
+            />
+
+            <BackupSettingsCard
+              language={language}
+              appVersion={t.valueVersion}
+              onRestored={handleBackupRestored}
+            />
 
             <HabitSettingsCard
               language={language}

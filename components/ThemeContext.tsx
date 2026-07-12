@@ -11,6 +11,7 @@ import {
 export type ThemeContextValue = {
   color: string;
   setColor: (next: ThemeColorOption) => Promise<void>;
+  reloadFromStorage: () => Promise<void>;
 };
 
 const STORAGE_KEY = '@theme_color';
@@ -18,24 +19,29 @@ const STORAGE_KEY = '@theme_color';
 const ThemeContext = createContext<ThemeContextValue>({
   color: DEFAULT_THEME_COLOR,
   setColor: async () => {},
+  reloadFromStorage: async () => {},
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [color, setColorState] = useState<string>(DEFAULT_THEME_COLOR);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const saved = await AsyncStorage.getItem(STORAGE_KEY);
-        const normalized = saved ? normalizeThemeHex(saved) : null;
-        if (normalized && isPresetThemeColor(normalized)) {
-          setColorState(normalized as ThemeColorOption);
-        }
-      } catch (e) {
-        console.log('theme load failed', e);
+  const reloadFromStorage = useCallback(async () => {
+    try {
+      const saved = await AsyncStorage.getItem(STORAGE_KEY);
+      const normalized = saved ? normalizeThemeHex(saved) : null;
+      if (normalized && isPresetThemeColor(normalized)) {
+        setColorState(normalized as ThemeColorOption);
+      } else {
+        setColorState(DEFAULT_THEME_COLOR);
       }
-    })();
+    } catch (e) {
+      console.log('theme load failed', e);
+    }
   }, []);
+
+  useEffect(() => {
+    void reloadFromStorage();
+  }, [reloadFromStorage]);
 
   const setColor = useCallback(async (next: ThemeColorOption) => {
     setColorState(next);
@@ -46,7 +52,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const value = useMemo(() => ({ color, setColor }), [color, setColor]);
+  const value = useMemo(
+    () => ({ color, setColor, reloadFromStorage }),
+    [color, setColor, reloadFromStorage],
+  );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

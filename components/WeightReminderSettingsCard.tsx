@@ -1,6 +1,6 @@
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Alert,
   Keyboard,
@@ -72,9 +72,14 @@ const copy = {
 
 type WeightReminderSettingsCardProps = {
   language: Language;
+  /** Increment to force reload after backup restore */
+  reloadToken?: number;
 };
 
-export function WeightReminderSettingsCard({ language }: WeightReminderSettingsCardProps) {
+export function WeightReminderSettingsCard({
+  language,
+  reloadToken = 0,
+}: WeightReminderSettingsCardProps) {
   const t = copy[language];
   const [weightReminderTimes, setWeightReminderTimes] = useState<string[]>([
     ...DEFAULT_WEIGHT_REMINDER_TIMES,
@@ -98,6 +103,12 @@ export function WeightReminderSettingsCard({ language }: WeightReminderSettingsC
       void loadConfig();
     }, [loadConfig]),
   );
+
+  React.  useEffect(() => {
+    if (reloadToken > 0) {
+      void loadConfig();
+    }
+  }, [reloadToken, loadConfig]);
 
   const persistSettings = async (
     times: string[],
