@@ -33,7 +33,7 @@ const copy = {
     recommendedSteps:
       '1.「バックアップを書き出す」を押す\n' +
       '2. 共有メニューで「ファイルに保存」を選ぶ\n' +
-      '3.「iCloud Drive」に保存する\n' +
+      '3.「iCloud Drive」に保存する（見つからない場合は左上の矢印でひとつ前の階層に戻って探す）\n' +
       '4. 機種変更後は「バックアップから復元」で、そのファイルを選ぶ',
     exportButton: 'バックアップを書き出す',
     importButton: 'バックアップから復元',
@@ -41,7 +41,7 @@ const copy = {
     exportGuideBody:
       '次の画面で保存先を選びます。初めての方は、次の手順がおすすめです。\n\n' +
       '1.「ファイルに保存」をタップ\n' +
-      '2.「iCloud Drive」を選んで保存\n' +
+      '2.「iCloud Drive」を選んで保存（見つからない場合は左上の矢印でひとつ前の階層に戻って探す）\n' +
       '3. 機種変更や再インストール後は、この画面の「バックアップから復元」から、保存したファイルを選ぶ',
     exportGuideConfirm: '手順を確認して書き出す',
     importGuideTitle: 'バックアップの復元手順',
@@ -69,7 +69,7 @@ const copy = {
     recommendedSteps:
       '1. Tap “Export backup”\n' +
       '2. In the share sheet, choose “Save to Files”\n' +
-      '3. Save it to iCloud Drive\n' +
+      '3. Save it to iCloud Drive (if you don’t see it, tap the back arrow at the top left to go up one level and look there)\n' +
       '4. After changing phones, use “Restore from backup” and pick that file',
     exportButton: 'Export backup',
     importButton: 'Restore from backup',
@@ -77,7 +77,7 @@ const copy = {
     exportGuideBody:
       'Next you will choose where to save the file. For most people, follow these steps:\n\n' +
       '1. Tap “Save to Files”\n' +
-      '2. Choose iCloud Drive and save\n' +
+      '2. Choose iCloud Drive and save (if you don’t see it, tap the back arrow at the top left to go up one level and look there)\n' +
       '3. Later, on a new phone or after reinstalling, use “Restore from backup” on this screen and select the same file',
     exportGuideConfirm: 'Continue to export',
     importGuideTitle: 'How to restore your backup',
