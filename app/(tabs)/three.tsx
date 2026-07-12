@@ -300,12 +300,6 @@ export default function TabThreeSettings() {
               reloadToken={reminderReloadToken}
             />
 
-            <BackupSettingsCard
-              language={language}
-              appVersion={t.valueVersion}
-              onRestored={handleBackupRestored}
-            />
-
             <HabitSettingsCard
               language={language}
               habits={habits}
@@ -336,6 +330,12 @@ export default function TabThreeSettings() {
                 </View>
               </TouchableOpacity>
             </View>
+
+            <BackupSettingsCard
+              language={language}
+              appVersion={t.valueVersion}
+              onRestored={handleBackupRestored}
+            />
 
             <View style={styles.card}>
               <Text style={styles.cardTitle}>{t.sectionPersonalize}</Text>
